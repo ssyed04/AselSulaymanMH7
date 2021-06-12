@@ -7,6 +7,26 @@ app = Flask(__name__)
 app.secret_key = "hello"
 app.permanent_session_lifetime= timedelta(days = 5)
 
+<<<<<<< Updated upstream
+=======
+db = SQLAlchemy(app)
+
+
+class users(db.Model):
+    _id = db.Column("id", db.Integer, primary_key = True)
+    name = db.Column("name", db.String(100))
+    email = db.Column("email", db.String(100))
+    password = db.Column("password", db.String(100))
+    
+    def __init__(self, name, email, password):
+        self.name = name
+        self.email = email
+        self.password = password
+        
+
+    
+
+>>>>>>> Stashed changes
 @app.route("/")
 def home():
     return render_template("base.html")
@@ -19,8 +39,20 @@ def test():
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form["nm"]
-        session["user"] = user
+        
+        username = request.form["nm"]
+        session["user"] = username
+        
+        email = request.form["email"]
+        session["email"] = email
+        
+        password = request.form["password"]
+        session["password"] = password
+        
+        usr = users(username, email, password)
+        db.session.add(usr)
+        db.session.commit()
+            
         return redirect(url_for("user"))
 
     else:
@@ -36,9 +68,13 @@ def user():
     if "user" in session:
         user = session["user"]
         flash("Login Successful")
+        
         if request.method == "POST":
             email = request.form["email"]
             session["email"] = email
+            found_user = users.query.filter_by(name = user).first()
+            found_user.email = email
+            db.session.commit()
             flash("Your email was saved.")
         else:
             if "email" in session:
