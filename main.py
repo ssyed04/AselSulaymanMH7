@@ -27,7 +27,7 @@ class users(db.Model):
 
 @app.route("/")
 def home():
-    return render_template("base.html")
+    return render_template("homepage.html")
 
 @app.route("/view")
 def view():
@@ -62,7 +62,6 @@ def user():
     email = None
     if "user" in session:
         user = session["user"]
-        flash("Login Successful")
         if request.method == "POST":
             email = request.form["email"]
             session["email"] = email
@@ -84,6 +83,32 @@ def logout():
     session.pop("user", None)
     session.pop("email", None)
     return redirect(url_for("signup"))
+
+@app.route("/login", methods = ["POST", "GET"])
+def login():
+    if request.method == "POST":
+        session.permanent = True
+        formemail = request.form["email"]
+        formpassword = request.form["password"]
+        session["entered password"] = formpassword
+        session["entered email"] = formemail
+        flash(f"password{formemail,formpassword}", "info")        
+        found_user = users.query.filter_by(email=formemail).first()
+        if found_user:
+            app.logger.warning(found_user)
+            if found_user.password == formpassword:
+                session['user'] = found_user.name
+                flash(f"password{formemail,formpassword}", "info")    
+                flash("Login Successful!", "info")        
+                
+                return redirect(url_for("user"))
+            else:
+                flash("Incorrect credentials. Please try again")
+                session.pop("entered password", None)
+                session.pop("enteredemail", None)
+    return render_template("login.html")
+
+
 
 if __name__ == "__main__":
     db.create_all()
