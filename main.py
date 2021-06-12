@@ -36,7 +36,7 @@ class users(db.Model):
 
 @app.route("/")
 def home():
-    return render_template("base.html")
+    return render_template("homepage.html")
 
 @app.route("/view")
 def view():
@@ -69,7 +69,23 @@ def signup():
 @app.route("/user", methods = ["POST", "GET"])
 def user():
     email = None
+<<<<<<< HEAD
     if "user" not in session:
+=======
+    if "user" in session:
+        user = session["user"]
+        if request.method == "POST":
+            email = request.form["email"]
+            session["email"] = email
+            flash("Your email was saved.")
+        else:
+            if "email" in session:
+                email = session["email"]
+        
+        return render_template("user.html", email = email)
+    
+    else:
+>>>>>>> 4e1e7609503668782239f2efa5914b963ac93638
         flash("You are not logged in!")
         return redirect(url_for("signup"))
 
@@ -87,6 +103,32 @@ def logout():
     session.pop("user", None)
     session.pop("email", None)
     return redirect(url_for("signup"))
+
+@app.route("/login", methods = ["POST", "GET"])
+def login():
+    if request.method == "POST":
+        session.permanent = True
+        formemail = request.form["email"]
+        formpassword = request.form["password"]
+        session["entered password"] = formpassword
+        session["entered email"] = formemail
+        flash(f"password{formemail,formpassword}", "info")        
+        found_user = users.query.filter_by(email=formemail).first()
+        if found_user:
+            app.logger.warning(found_user)
+            if found_user.password == formpassword:
+                session['user'] = found_user.name
+                flash(f"password{formemail,formpassword}", "info")    
+                flash("Login Successful!", "info")        
+                
+                return redirect(url_for("user"))
+            else:
+                flash("Incorrect credentials. Please try again")
+                session.pop("entered password", None)
+                session.pop("enteredemail", None)
+    return render_template("login.html")
+
+
 
 if __name__ == "__main__":
     db.create_all()
