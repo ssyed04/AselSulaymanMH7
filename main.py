@@ -16,12 +16,21 @@ class users(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     password = db.Column(db.String(100))
+    goal = db.Column(db.Integer)
+    equipment = db.Column(db.Integer)
+    category = db.Column(db.Integer)
+    
     
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
         self.password = password
-        
+        self.goal = 0
+        self.equipment = 0
+        self.category = 0
+
+    def categorize(self):
+        self.category = self.equipment
 
     
 
@@ -60,23 +69,17 @@ def signup():
 @app.route("/user", methods = ["POST", "GET"])
 def user():
     email = None
-    if "user" in session:
-        user = session["user"]
-        flash("Login Successful")
-        if request.method == "POST":
-            email = request.form["email"]
-            session["email"] = email
-            flash("Your email was saved.")
-        else:
-            if "email" in session:
-                email = session["email"]
-        
-        return render_template("user.html", email = email)
-    
-    else:
+    if "user" not in session:
         flash("You are not logged in!")
         return redirect(url_for("signup"))
 
+    user = session["user"]
+    flash("Login Successful")
+    current_user = users.query.filter_by(name=user).first()
+    current_user.categorize(current_user)
+    
+    return render_template("user.html", user = current_user)
+        
 @app.route("/logout")
 def logout():
     user = session["user"]
