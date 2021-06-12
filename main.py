@@ -16,22 +16,12 @@ class users(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     password = db.Column(db.String(100))
-    goal = db.Column(db.Integer)
-    equipment = db.Column(db.Integer)
-    category = db.Column(db.Integer)
     
     
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
         self.password = password
-        self.goal = 0
-        self.equipment = 0
-        self.category = 0
-
-    def categorize(self):
-        self.category = self.equipment
-
     
 
 @app.route("/")
@@ -76,7 +66,6 @@ def user():
     user = session["user"]
     flash("Login Successful")
     current_user = users.query.filter_by(name=user).first()
-    current_user.categorize(current_user)
     
     return render_template("user.html", user = current_user)
         
