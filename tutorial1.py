@@ -11,11 +11,11 @@ app.permanent_session_lifetime= timedelta(days = 5)
 
 db = SQLAlchemy(app)
 
-class Users(db.Model):
+class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
-    name = db.Column("name", db.String(100))
-    email = db.Column("email", db.String(100))
-    password = db.Column("password", db.String(100))
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    password = db.Column(db.String(100))
     
     def __init__(self, name, email, password):
         self.name = name
@@ -29,9 +29,10 @@ class Users(db.Model):
 def home():
     return render_template("base.html")
 
-@app.route("/test")
-def test():
-    return render_template("template.html")
+@app.route("/view")
+def view():
+    return render_template("view.html", values = users.query.all())
+
 
 @app.route("/signup", methods = ["POST", "GET"])
 def signup():
@@ -39,6 +40,14 @@ def signup():
         session.permanent = True
         user = request.form["nm"]
         session["user"] = user
+        email= request.form["email"]
+        session["email"] = email
+        password = request.form["password"]
+        session["password"] = password
+
+        usr = users(user, email, password)
+        db.session.add(usr)
+        db.session.commit()
         return redirect(url_for("user"))
 
     else:
@@ -74,7 +83,8 @@ def logout():
     flash(f"You have been logged out successfully, {user}.", "info")
     session.pop("user", None)
     session.pop("email", None)
-    return redirect(url_for("login"))
+    return redirect(url_for("signup"))
 
 if __name__ == "__main__":
+    db.create_all()
     app.run(debug=True)
