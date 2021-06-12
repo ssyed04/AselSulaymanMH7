@@ -75,7 +75,7 @@ def user():
     
     else:
         flash("You are not logged in!")
-        return redirect(url_for("login"))
+        return redirect(url_for("signup"))
 
 @app.route("/logout")
 def logout():
