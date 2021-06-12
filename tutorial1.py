@@ -5,7 +5,25 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = "hello"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.permanent_session_lifetime= timedelta(days = 5)
+
+db = SQLAlchemy(app)
+
+class Users(db.Model):
+    _id = db.Column("id", db.Integer, primary_key = True)
+    name = db.Column("name", db.String(100))
+    email = db.Column("email", db.String(100))
+    password = db.Column("password", db.String(100))
+    
+    def __init__(self, name, email, password):
+        self.name = name
+        self.email = email
+        self.password = password
+        
+
+    
 
 @app.route("/")
 def home():
@@ -15,8 +33,8 @@ def home():
 def test():
     return render_template("template.html")
 
-@app.route("/login", methods = ["POST", "GET"])
-def login():
+@app.route("/signup", methods = ["POST", "GET"])
+def signup():
     if request.method == "POST":
         session.permanent = True
         user = request.form["nm"]
@@ -28,7 +46,7 @@ def login():
             flash("Already Logged In!")
             return redirect(url_for("user"))
         
-        return render_template("login.html")
+        return render_template("signup.html")
 
 @app.route("/user", methods = ["POST", "GET"])
 def user():
