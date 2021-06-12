@@ -69,23 +69,7 @@ def signup():
 @app.route("/user", methods = ["POST", "GET"])
 def user():
     email = None
-<<<<<<< HEAD
     if "user" not in session:
-=======
-    if "user" in session:
-        user = session["user"]
-        if request.method == "POST":
-            email = request.form["email"]
-            session["email"] = email
-            flash("Your email was saved.")
-        else:
-            if "email" in session:
-                email = session["email"]
-        
-        return render_template("user.html", email = email)
-    
-    else:
->>>>>>> 4e1e7609503668782239f2efa5914b963ac93638
         flash("You are not logged in!")
         return redirect(url_for("signup"))
 
