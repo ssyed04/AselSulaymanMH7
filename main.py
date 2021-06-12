@@ -31,22 +31,16 @@ class users(db.Model):
 
     def getTracks(self, track_weight, track_PRs, track_macros):
         print(track_weight)
-        self.tracks = setChar(self.tracks, track_weight)
-        self.tracks = setChar(self.tracks, track_weight)
-        self.tracks = setChar(self.tracks, track_macros)
+        self.tracks += setChar(track_weight)
+        self.tracks += setChar(track_weight)
+        self.tracks += setChar(track_macros)
         
 
-    def getKnowledge(self, track_weight):
-        print(track_weight)
-        if track_weight == True:
-            self.tracks = "YNN"
-
-def setChar(str, bool):
+def setChar(bool):
     if bool:
-        str += "Y"
+        return "Y"
     else:
-        str += "N"
-    return str
+        return "N"
     
 @app.route("/")
 def home():
@@ -69,10 +63,14 @@ def signup():
         session["password"] = password
 
         track_weight = request.form["track_weight"] == "on"
+        track_PRs = request.form["track_PRs"] == "on"
+        track_macros = request.form["track_macros"] == "on"
         session["track_weight"] = track_weight
+        session["track_PRs"] = track_PRs
+        session["track_macros"] = track_macros
 
         usr = users(user, email, password, track_weight)
-        usr.getTracks(track_weight)
+        usr.getTracks(track_weight, track_PRs, track_macros)
         db.session.add(usr)
         db.session.commit()
         return redirect(url_for("user"))
