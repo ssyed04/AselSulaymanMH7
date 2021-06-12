@@ -3,6 +3,7 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import time, timedelta
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import expression
 
 
 app = Flask(__name__)
@@ -17,16 +18,36 @@ class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    password = db.Column(db.String(100))
+    word = db.Column(db.String(100), nullable=False)
+    #track_weight = db.Column(db.Boolean, unique=False, nullable=False)
+    tracks = db.Column(db.String(100))
+    knowledge = db.Column(db.String(100))
     
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, track_weight):
         self.name = name
         self.email = email
-        self.password = password
+        self.word = password
+        #self.track_weight = track_weight
+
+    def getTracks(self, track_weight, track_PRs, track_macros):
+        print(track_weight)
+        self.tracks = setChar(self.tracks, track_weight)
+        self.tracks = setChar(self.tracks, track_weight)
+        self.tracks = setChar(self.tracks, track_macros)
         
 
-    
+    def getKnowledge(self, track_weight):
+        print(track_weight)
+        if track_weight == True:
+            self.tracks = "YNN"
 
+def setChar(str, bool):
+    if bool:
+        str += "Y"
+    else:
+        str += "N"
+    return str
+    
 @app.route("/")
 def home():
     return render_template("homepage.html")
@@ -47,7 +68,11 @@ def signup():
         password = request.form["password"]
         session["password"] = password
 
-        usr = users(user, email, password)
+        track_weight = request.form["track_weight"] == "on"
+        session["track_weight"] = track_weight
+
+        usr = users(user, email, password, track_weight)
+        usr.getTracks(track_weight)
         db.session.add(usr)
         db.session.commit()
         return redirect(url_for("user"))

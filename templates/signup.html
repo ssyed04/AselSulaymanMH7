@@ -10,16 +10,52 @@
             {% endfor %} 
         {% endif %}
     {% endwith %}
+<p> Setup Your Account: </p>
 <form action = "#" method = "post">
-    <p> Name:</p>
+    <p> Username:</p>
     <p><input type="text" name="nm" /></p>
     <p> Email:</p>
     <p><input type="email" name="email" value = "{{email if email}}"/></p>
-    <p> Password:</p>
+    <p> Set Password:</p>
     <p><input type="text" name="password" /></p>
 
+    <p>Tell Us About You:</p>
+    <p> Age:</p>
+    <p><input type="number" name="age" /></p>
+    <p> Height:</p>
+    <p><input type="text" step= name="height" /></p>
+    <p> Weight:</p>
+    <p><input type="number" name="weight" /></p>
+    
+    <p>What would you like to track?</p>
+    <input type="checkbox" id="track_weight" name="track_weight"/>
+    <label for="track_weight">Weight</label><br>
+    <input type="checkbox" id="track_PRs" name="track_PRs"/>
+    <label for="track_PRs">Personal records</label><br>
+    <input type="checkbox" id="track_macros" name="track_macros"/>
+    <label for="track_macros">Macronutrients</label><br>
 
+    <p> How would you rate your knowledge of fitness and exercise?</p>
+    <input type="checkbox" id="is_beginner" name="is_beginner"/>
+    <label for="is_beginner"> I am just beginning my journey in health and fitness!</label><br>
+    <input type="checkbox" id="is_mid" name="is_mid"/>
+    <label for="is_mid"> I have some knowledge of fitness topics but I'm not proficient</label><br>
+    <input type="checkbox" id="is_pro" name="is_pro" />
+    <label for="is_pro"> I know what I am doing</label><br>
 
+    <p> What fitness equipment do you have access to? (select all that apply)</p>
+    <input type="checkbox" id="has_rack" name="has_rack"/>
+    <label for="has_rack"> Squat rack + bench</label><br>
+    <input type="checkbox" id="has_barbell" name="has_barbell"/>
+    <label for="has_barbell"> Barbell + plates</label><br>
+    <input type="checkbox" id="has_dbs" name="has_dbs" />
+    <label for="has_dbs"> Dumbells (at least one pair, reasonable weight that can be used for many exercises)</label><br>
+    <input type="checkbox" id="has_bands" name="has_bands" />
+    <label for="has_bands"> Resistance bands (at least one, must have sturdy fixture to attach too)</label><br>
+    <input type="checkbox" id="has_treadmill" name="has_treadmill" />
+    <label for="has_treadmill"> Treadmill</label><br>
+    <input type="checkbox" id="has_eliptical" name="has_eliptical" />
+    <label for="has_eliptical"> Eliptical</label><br>
 
     <p><input type="submit" value= "Submit" /></p>
 </form>
