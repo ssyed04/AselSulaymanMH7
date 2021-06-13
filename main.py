@@ -94,6 +94,8 @@ def categorize2(knowledge, equipment):
     else:
         cardio = 4
 
+    return cardio
+
     
 @app.route("/")
 def home():
@@ -173,12 +175,21 @@ def signup():
 @app.route("/myplan", methods = ["POST", "GET"])
 def myplan():
     email = None
+    workoutpictures = ["workout1.jpg","workout2.jpg","workout3.jpg","workout4.jpg", "workout5.jpg","workout6.jpg"]
+    cardiopictures = ["cardio1.jpg","cardio2.jpg","cardio3.jpg","cardio4.jpg"]
+    cardiolinks = ["https://drive.google.com/file/d/1BeX8FavM8iRD_BEz-xNxB_m_7XB3g7w5/view?usp=sharing", "https://drive.google.com/file/d/12YmqdWdskpQ_fiSDjKwtYiXujmaoUV8B/view?usp=sharing", "https://drive.google.com/file/d/1XIrdHtFVQfaqv1A8U0W2SAHPQ4uMDzL9/view?usp=sharing", "https://drive.google.com/file/d/1pnKzqUNEM09fEoFGw1XhTjqEZDSk9LwH/view?usp=sharing"]
+    workoutlinks = ["https://drive.google.com/file/d/1BbW7ghK30KHb1zsYOP7uuL8U-odGnUVZ/view?usp=sharing", "https://drive.google.com/file/d/1wMbPYXraFv7Rbq7Y-VnmEx9vwZ4g91DP/view?usp=sharing", "https://drive.google.com/file/d/1T4Ynd68KonF5_Dz73HlNVVdlHjWz4r_s/view?usp=sharing", "https://drive.google.com/file/d/1P1RSpdKwef-ldDJnBO42tHlNuEhjYGRr/view?usp=sharing", "https://drive.google.com/file/d/1mZEXDnkid3V0MgZQmhHVIRDEblo4FSdL/view?usp=sharing", "https://drive.google.com/file/d/1WaN1pj1jZDs-4Dby1v_FV89OW0EozMRx/view?usp=sharing"]
     if "user" in session:
         user = session["user"]
         found_user = users.query.filter_by(name=user).first()
-        workout = found_user.workout
+        workoutpic = workoutpictures[found_user.workout-1]
+        workoutlink = workoutlinks[found_user.workout-1]
+        cardiopic = cardiopictures[found_user.cardio-1]
+        cardiolink = cardiolinks[found_user.cardio-1]
         
-        return render_template("myplan.html", email = email, workout = workout)
+        app.logger.warning(workoutpic)
+        app.logger.warning(cardiopic)
+        return render_template("myplan.html", workout = workoutpic, cardio = cardiopic, workoutlink = workoutlink, cardiolink = cardiolink)
     
     else:
         flash("You are not logged in!")
@@ -199,14 +210,12 @@ def login():
         formemail = request.form["email"]
         formpassword = request.form["password"]
         session["entered password"] = formpassword
-        session["entered email"] = formemail
-        flash(f"password{formemail,formpassword}", "info")        
+        session["entered email"] = formemail      
         found_user = users.query.filter_by(email=formemail).first()
         if found_user:
             app.logger.warning(found_user)
             if found_user.password == formpassword:
                 session['user'] = found_user.name
-                flash(f"password{formemail,formpassword}", "info")    
                 flash("Login Successful!", "info")        
                 
                 return redirect(url_for("myplan"))
