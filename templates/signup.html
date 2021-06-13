@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block title %} Sign Up! {% endblock %}
-
 {% block content %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -9,54 +8,72 @@
             <p> {{msg}}</p> 
             {% endfor %} 
         {% endif %}
-    {% endwith %}
-<p> Setup Your Account: </p>
-<form action = "#" method = "post">
-    <p> Username:</p>
-    <p><input type="text" name="nm" /></p>
-    <p> Email:</p>
-    <p><input type="email" name="email" value = "{{email if email}}"/></p>
-    <p> Set Password:</p>
-    <p><input type="text" name="password" /></p>
+    {% endwith %} 
 
-    <p>Tell Us About You:</p>
-    <p> Age:</p>
-    <p><input type="number" name="age" /></p>
-    <p> Height:</p>
-    <p><input type="text" step= name="height" /></p>
-    <p> Weight:</p>
-    <p><input type="number" name="weight" /></p>
-    
-    <p>What would you like to track?</p>
-    <input type="checkbox" id="track_weight" name="track_weight"/>
-    <label for="track_weight">Weight</label><br>
-    <input type="checkbox" id="track_PRs" name="track_PRs"/>
-    <label for="track_PRs">Personal records</label><br>
-    <input type="checkbox" id="track_macros" name="track_macros"/>
-    <label for="track_macros">Macronutrients</label><br>
 
-    <p> How would you rate your knowledge of fitness and exercise?</p>
-    <input type="checkbox" id="is_beginner" name="is_beginner"/>
-    <label for="is_beginner"> I am just beginning my journey in health and fitness!</label><br>
-    <input type="checkbox" id="is_mid" name="is_mid"/>
-    <label for="is_mid"> I have some knowledge of fitness topics but I'm not proficient</label><br>
-    <input type="checkbox" id="is_pro" name="is_pro" />
-    <label for="is_pro"> I know what I am doing</label><br>
 
-    <p> What fitness equipment do you have access to? (select all that apply)</p>
-    <input type="checkbox" id="has_rack" name="has_rack"/>
-    <label for="has_rack"> Squat rack + bench</label><br>
-    <input type="checkbox" id="has_barbell" name="has_barbell"/>
-    <label for="has_barbell"> Barbell + plates</label><br>
-    <input type="checkbox" id="has_dbs" name="has_dbs" />
-    <label for="has_dbs"> Dumbells (at least one pair, reasonable weight that can be used for many exercises)</label><br>
-    <input type="checkbox" id="has_bands" name="has_bands" />
-    <label for="has_bands"> Resistance bands (at least one, must have sturdy fixture to attach too)</label><br>
-    <input type="checkbox" id="has_treadmill" name="has_treadmill" />
-    <label for="has_treadmill"> Treadmill</label><br>
-    <input type="checkbox" id="has_eliptical" name="has_eliptical" />
-    <label for="has_eliptical"> Eliptical</label><br>
 
-    <p><input type="submit" value= "Submit" /></p>
-</form>
-{% endblock %}
+
+<h3> Setup Your Account: </h3> 
+<form action = '#' method = 'post' class="row g-3">
+    <div class="col-md-4">
+        <label for="inputText4" class="form-label">Username:</label>
+        <input type="text" name = "nm" class="form-control" id="inputText4">
+      </div>
+    <div class="col-md-4">
+      <label for="inputEmail4" class="form-label">Email:</label>
+      <input type="email" name = "email" class="form-control" id="inputEmail4">
+    </div>
+    <div class="col-md-4">
+      <label for="inputPassword4" class="form-label">Password:</label>
+      <input type="password" name = "password" class="form-control" id="inputPassword4">
+    </div>
+    <h3> Tell us about yourself</h3>
+    <div class="col-4">
+      <label for="inputAge" class="form-label">Age: </label>
+      <input type="number" name = "age" class="form-control" id="inputAge" placeholder="99">
+    </div>
+    <div class="col-4">
+        <label for="inputHeight" class="form-label">Height(cm): </label>
+        <input type="number" name = "height" class="form-control" id="inputHeight" placeholder="160">
+    </div>
+    <div class="col-4">
+        <label for="inputWeight" class="form-label">Weight(kg): </label>
+        <input type="number" name = "weight" class="form-control" id="inputWeight" placeholder="99">
+    </div>
+    <div>
+        <h3>What would you like to track?</h3>
+        <input type="checkbox" id="track_weight" name="track_weight"/>
+        <label for="track_weight">Weight</label><br>
+        <input type="checkbox" id="track_PRs" name="track_PRs"/>
+        <label for="track_PRs">Personal records</label><br>
+        <input type="checkbox" id="track_macros" name="track_macros"/>
+        <label for="track_macros">Macronutrients</label><br>
+
+        <h3> How would you rate your knowledge of fitness and exercise?</h3>
+        <input type="checkbox" id="is_beginner" name="is_beginner"/>
+        <label for="is_beginner"> I am just beginning my journey in health and fitness!</label><br>
+        <input type="checkbox" id="is_mid" name="is_mid"/>
+        <label for="is_mid"> I have some knowledge of fitness topics but I'm not proficient</label><br>
+        <input type="checkbox" id="is_pro" name="is_pro" />
+        <label for="is_pro"> I know what I am doing</label><br>
+
+        <h3> What fitness equipment do you have access to? (select all that apply)</h3>
+        <input type="checkbox" id="has_rack" name="has_rack"/>
+        <label for="has_rack"> Squat rack + bench</label><br>
+        <input type="checkbox" id="has_barbell" name="has_barbell"/>
+        <label for="has_barbell"> Barbell + plates</label><br>
+        <input type="checkbox" id="has_dbs" name="has_dbs" />
+        <label for="has_dbs"> Dumbells (at least one pair, reasonable weight that can be used for many exercises)</label><br>
+        <input type="checkbox" id="has_bands" name="has_bands" />
+        <label for="has_bands"> Resistance bands (at least one, must have sturdy fixture to attach too)</label><br>
+        <input type="checkbox" id="has_treadmill" name="has_treadmill" />
+        <label for="has_treadmill"> Treadmill</label><br>
+        <input type="checkbox" id="has_eliptical" name="has_eliptical" />
+        <label for="has_eliptical"> Eliptical</label><br>
+        <p><input type="submit" value= "Submit" /></p>
+        
+    </div>
+
+  </form>
+{% endblock %}  
