@@ -128,7 +128,7 @@ def signup():
     else:
         if "user" in session:
             flash("Already Logged In!")
-            return redirect(url_for("user"))
+            return redirect(url_for("dashboard"))
         
         return render_template("signup.html")
 
@@ -176,7 +176,7 @@ def login():
                 flash(f"password{formemail,formpassword}", "info")    
                 flash("Login Successful!", "info")        
                 
-                return redirect(url_for("user"))
+                return redirect(url_for("dashboard"))
             else:
                 flash("Incorrect credentials. Please try again")
                 session.pop("entered password", None)
