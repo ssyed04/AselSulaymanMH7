@@ -22,18 +22,34 @@ class users(db.Model):
     #track_weight = db.Column(db.Boolean, unique=False, nullable=False)
     tracks = db.Column(db.String(100))
     knowledge = db.Column(db.String(100))
+    equipment = db.Column(db.String(100))
     
     def __init__(self, name, email, password, track_weight):
         self.name = name
         self.email = email
         self.word = password
+        self.tracks = "_"
+        self.knowledge = "_"
+        self.equipment = "_"
         #self.track_weight = track_weight
 
-    def getTracks(self, track_weight, track_PRs, track_macros):
-        print(track_weight)
-        self.tracks += setChar(track_weight)
-        self.tracks += setChar(track_weight)
-        self.tracks += setChar(track_macros)
+    def getTracks(self, arg1, arg2, arg3):
+        self.tracks += setChar(arg1)
+        self.tracks += setChar(arg2)
+        self.tracks += setChar(arg3)
+
+    def getKnowledge(self, arg1, arg2, arg3):
+        self.knowledge += setChar(arg1)
+        self.knowledge += setChar(arg2)
+        self.knowledge += setChar(arg3)
+
+    def getEquipment(self, arg1, arg2, arg3, arg4, arg5, arg6):
+        self.equipment += setChar(arg1)
+        self.equipment += setChar(arg2)
+        self.equipment += setChar(arg3)
+        self.equipment += setChar(arg4)
+        self.equipment += setChar(arg5)
+        self.equipment += setChar(arg6)
         
 
 def setChar(bool):
@@ -62,15 +78,49 @@ def signup():
         password = request.form["password"]
         session["password"] = password
 
-        track_weight = request.form["track_weight"] == "on"
-        track_PRs = request.form["track_PRs"] == "on"
-        track_macros = request.form["track_macros"] == "on"
+        track_weight = 'track_weight' in request.form and request.form["track_weight"] == "on"
+        track_PRs = 'track_PRs' in request.form and request.form["track_PRs"] == "on"
+        track_macros = 'track_macros' in request.form and request.form["track_macros"] == "on"
         session["track_weight"] = track_weight
         session["track_PRs"] = track_PRs
         session["track_macros"] = track_macros
+        
+        is_beginner = 'is_beginner' in request.form and request.form["is_beginner"] == "on"
+        is_mid = 'is_mid' in request.form and request.form["is_mid"] == "on"
+        is_pro = 'is_pro' in request.form and request.form["is_pro"] == "on"
+        #is_beginner = request.form["is_beginner"] == "on"
+        #is_mid = request.form["is_mid"] == "on"
+        #is_pro = request.form["is_pro"] == "on"
+        session["is_beginner"] = is_beginner
+        session["is_mid"] = is_mid
+        session["is_pro"] = is_pro
 
+        has_rack = 'has_rack' in request.form and request.form["has_rack"] == "on"
+        has_barbell = 'has_barbell' in request.form and request.form["has_barbell"] == "on"
+        has_dbs = 'has_dbs' in request.form and request.form["has_dbs"] == "on"
+        has_bands = 'has_bands' in request.form and request.form["has_bands"] == "on"
+        has_treadmill = 'has_treadmill' in request.form and request.form["has_treadmill"] == "on"
+        has_eliptical = 'has_eliptical' in request.form and request.form["has_eliptical"] == "on"
+        #has_rack = request.form["has_rack"] == "on"
+        #has_barbell = request.form["has_barbell"] == "on"
+        #has_dbs = request.form["has_dbs"] == "on"
+        #has_bands = request.form["has_bands"] == "on"
+        #has_treadmill = request.form["has_treadmill"] == "on"
+        #has_eliptical = request.form["has_eliptical"] == "on"
+        session["has_rack"] = has_rack
+        session["has_barbell"] = has_barbell
+        session["has_dbs"] = has_dbs
+        session["has_bands"] = has_bands
+        session["has_treadmill"] = has_treadmill
+        session["has_eliptical"] = has_eliptical
+
+        
         usr = users(user, email, password, track_weight)
         usr.getTracks(track_weight, track_PRs, track_macros)
+        usr.getKnowledge(is_beginner, is_mid, is_pro)
+        usr.getEquipment(has_rack, has_barbell, has_dbs, has_bands, has_treadmill, has_eliptical)
+        #usr.getKnowledge(is_beginner, is_mid, is_pro)
+        #usr.getEquipment(has_rack, has_barbell, has_dbs, has_bands, has_treadmill, has_eliptical)
         db.session.add(usr)
         db.session.commit()
         return redirect(url_for("user"))
