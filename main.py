@@ -23,6 +23,8 @@ class users(db.Model):
     tracks = db.Column(db.String(100))
     knowledge = db.Column(db.String(100))
     equipment = db.Column(db.String(100))
+    workout = db.Column(db.Integer)
+    cardio = db.Column(db.Integer)
     
     def __init__(self, name, email, password, track_weight):
         self.name = name
@@ -31,6 +33,8 @@ class users(db.Model):
         self.tracks = "_"
         self.knowledge = "_"
         self.equipment = "_"
+        self.workout = 0
+        self.cardio = 0
         #self.track_weight = track_weight
 
     def getTracks(self, arg1, arg2, arg3):
@@ -50,6 +54,11 @@ class users(db.Model):
         self.equipment += setChar(arg4)
         self.equipment += setChar(arg5)
         self.equipment += setChar(arg6)
+
+    def setPlan(self):
+        self.workout = categorize(self.knowledge, self.equipment)
+        self.cardio = categorize2(self.knowledge, self.equipment)
+
         
 
 def setChar(bool):
@@ -57,6 +66,34 @@ def setChar(bool):
         return "Y"
     else:
         return "N"
+
+def categorize(knowledge, equipment):
+    if equipment[1]=="Y":
+        workout = 1
+    elif equipment[2]=="Y":
+        workout = 3
+    elif equipment[3]=="Y":
+        workout = 4
+    elif equipment[4]=="Y":
+        workout = 5
+    
+    if workout==1 and knowledge[1]=="Y":
+        workout = 2
+    elif workout==5 and knowledge[1]=="Y" or knowledge[2]=="Y":
+        workout = 6
+
+    return workout
+
+def categorize2(knowledge, equipment):
+    if equipment[5:]=="YY":
+        cardio = 1
+    elif equipment[5]=="Y":
+        cardio = 2
+    elif equipment[5]=="Y":
+        cardio = 3
+    else:
+        cardio = 4
+
     
 @app.route("/")
 def home():
@@ -119,6 +156,7 @@ def signup():
         usr.getTracks(track_weight, track_PRs, track_macros)
         usr.getKnowledge(is_beginner, is_mid, is_pro)
         usr.getEquipment(has_rack, has_barbell, has_dbs, has_bands, has_treadmill, has_eliptical)
+        usr.setPlan()
         #usr.getKnowledge(is_beginner, is_mid, is_pro)
         #usr.getEquipment(has_rack, has_barbell, has_dbs, has_bands, has_treadmill, has_eliptical)
         db.session.add(usr)
@@ -137,15 +175,10 @@ def myplan():
     email = None
     if "user" in session:
         user = session["user"]
-        if request.method == "POST":
-            email = request.form["email"]
-            session["email"] = email
-            flash("Your email was saved.")
-        else:
-            if "email" in session:
-                email = session["email"]
+        found_user = users.query.filter_by(name=user).first()
+        workout = found_user.workout
         
-        return render_template("myplan.html", email = email)
+        return render_template("myplan.html", email = email, workout = workout)
     
     else:
         flash("You are not logged in!")
@@ -187,6 +220,3 @@ def login():
 if __name__ == "__main__":
     db.create_all()
     app.run(debug=True)
-
-#test asel
-#test sul
