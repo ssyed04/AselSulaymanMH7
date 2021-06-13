@@ -18,7 +18,7 @@ class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    word = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
     #track_weight = db.Column(db.Boolean, unique=False, nullable=False)
     tracks = db.Column(db.String(100))
     knowledge = db.Column(db.String(100))
@@ -27,7 +27,7 @@ class users(db.Model):
     def __init__(self, name, email, password, track_weight):
         self.name = name
         self.email = email
-        self.word = password
+        self.password = password
         self.tracks = "_"
         self.knowledge = "_"
         self.equipment = "_"
@@ -123,17 +123,17 @@ def signup():
         #usr.getEquipment(has_rack, has_barbell, has_dbs, has_bands, has_treadmill, has_eliptical)
         db.session.add(usr)
         db.session.commit()
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("myplan"))
 
     else:
         if "user" in session:
             flash("Already Logged In!")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("myplan"))
         
         return render_template("signup.html")
 
-@app.route("/dashboard", methods = ["POST", "GET"])
-def dashboard():
+@app.route("/myplan", methods = ["POST", "GET"])
+def myplan():
     email = None
     if "user" in session:
         user = session["user"]
@@ -145,7 +145,7 @@ def dashboard():
             if "email" in session:
                 email = session["email"]
         
-        return render_template("progress.html", email = email)
+        return render_template("myplan.html", email = email)
     
     else:
         flash("You are not logged in!")
@@ -176,7 +176,7 @@ def login():
                 flash(f"password{formemail,formpassword}", "info")    
                 flash("Login Successful!", "info")        
                 
-                return redirect(url_for("dashboard"))
+                return redirect(url_for("myplan"))
             else:
                 flash("Incorrect credentials. Please try again")
                 session.pop("entered password", None)
