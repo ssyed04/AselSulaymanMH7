@@ -123,7 +123,7 @@ def signup():
         #usr.getEquipment(has_rack, has_barbell, has_dbs, has_bands, has_treadmill, has_eliptical)
         db.session.add(usr)
         db.session.commit()
-        return redirect(url_for("user"))
+        return redirect(url_for("dashboard"))
 
     else:
         if "user" in session:
@@ -132,8 +132,8 @@ def signup():
         
         return render_template("signup.html")
 
-@app.route("/user", methods = ["POST", "GET"])
-def user():
+@app.route("/dashboard", methods = ["POST", "GET"])
+def dashboard():
     email = None
     if "user" in session:
         user = session["user"]
@@ -145,7 +145,7 @@ def user():
             if "email" in session:
                 email = session["email"]
         
-        return render_template("user.html", email = email)
+        return render_template("progress.html", email = email)
     
     else:
         flash("You are not logged in!")
@@ -182,7 +182,6 @@ def login():
                 session.pop("entered password", None)
                 session.pop("enteredemail", None)
     return render_template("login.html")
-
 
 
 if __name__ == "__main__":
